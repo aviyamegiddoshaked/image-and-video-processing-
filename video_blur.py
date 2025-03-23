@@ -4,11 +4,12 @@ import numpy as np
 import os
 
 # Path to your original video file
-video_path = "/Users/aviyamegiddoshaked/Desktop/IMG_1799.MOV"
+video_path = "/Users/aviyamegiddoshaked/Desktop/renee.mp4"
+
 
 # Define the output path in the current script folder
-output_folder = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing--1"
-output_file_name = "blurred_IMG_1799.MOV"
+output_folder = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-"
+output_file_name = "radius10.MOV"
 output_path = os.path.join(output_folder, output_file_name)
 
 # Open the video file
