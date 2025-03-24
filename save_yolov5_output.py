@@ -1,54 +1,81 @@
 import torch
 import pandas as pd
-import cv2  # OpenCV for video processing
+import cv2
+from PIL import Image
+import numpy as np
 
-# Load YOLOv5 model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # Pre-trained YOLOv5s model
+# Load YOLOv5 model (s = small model)
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s', trust_repo=True)
+model.eval()
 
-# Path to your video
-video_path = '/Users/aviyamegiddoshaked/Desktop/IMG_1799.MOV'
-#video_path = '/path/to/your/video.mp4'
-output_csv_path = 'detections_with_time.csv'
-
+# Input and output paths
+video_path = '/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/radius5.MOV'
+output_csv_path = 'radius5.csv'
+output_video_path = 'yolo_annotated_radius5.mp4'
 
 # Open the video
 cap = cv2.VideoCapture(video_path)
-fps = cap.get(cv2.CAP_PROP_FPS)  # Get frames per second of the video
-frame_number = 0  # Track the current frame number
+if not cap.isOpened():
+    print("❌ Error: Cannot open video.")
+    exit()
 
-all_detections = []  # List to store detections for all frames
+# Get video properties
+fps = cap.get(cv2.CAP_PROP_FPS)
+frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+# Set up video writer for output
+out = cv2.VideoWriter(
+    output_video_path,
+    cv2.VideoWriter_fourcc(*'mp4v'),
+    fps,
+    (frame_width, frame_height)
+)
+
+frame_number = 0
+all_detections = []
 
 while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
         break
 
-    # Calculate time in seconds for the current frame
-    time_in_video = frame_number / fps
+    # Convert frame from BGR (OpenCV) to RGB (YOLO expects RGB)
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    # Run inference on the current frame
-    results = model(frame)
+    # Run YOLO inference
+    results = model(rgb_frame)
 
-    # Convert detections to a DataFrame
+    # Get detection dataframe
     detections = results.pandas().xyxy[0]
-
-    # Add the time column
+    time_in_video = frame_number / fps
     detections['time'] = time_in_video
-
-    # Append the frame's detections to the list
     all_detections.append(detections)
 
-    # Increment the frame counter
+    # Draw detections on the frame
+    for index, row in detections.iterrows():
+        x1, y1, x2, y2 = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
+        label = f"{row['name']} {row['confidence']:.2f}"
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(frame, label, (x1, y1 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+    out.write(frame)
+    cv2.imshow('YOLO Detection', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
     frame_number += 1
 
-# Combine all detections into a single DataFrame
+# Save all detections to CSV
 final_detections = pd.concat(all_detections, ignore_index=True)
-
-# Save to CSV
 final_detections.to_csv(output_csv_path, index=False)
 
-print(f"Detections with timestamps saved to {output_csv_path}")
-
-# Release the video capture object
+# Cleanup
 cap.release()
+out.release()
 cv2.destroyAllWindows()
+
+print(f"✅ YOLO detections saved to {output_csv_path}")
+print(f"✅ Annotated video saved to {output_video_path}")
