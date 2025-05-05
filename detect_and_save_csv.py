@@ -5,10 +5,18 @@ from PIL import Image
 import numpy as np
 import os
 
-# --- Configuration ---
-video_path = "runs part3/radius1.mov"
-output_csv_path = "runs part3/radius1.csv"
-output_video_path = "runs part3/yolo_annotated_radius1.mp4"
+import sys
+if len(sys.argv) != 2:
+    print("❌ Usage: python detect_and_save_csv.py <video_filename>")
+    exit()
+
+video_filename = sys.argv[1]
+video_path = f"databrary/{video_filename}"
+video_name = os.path.splitext(video_filename)[0]
+output_csv_path = f"runs/databrary_outputs/{video_name}.csv"
+output_video_path = f"runs/databrary_outputs/annotated_{video_name}.mp4"
+
+
 
 # Create output folder if it doesn't exist
 os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
