@@ -1,7 +1,7 @@
 from PIL import Image, ImageFilter
 
 # Path to your image
-image_path = r"/Users/aviyamegiddoshaked/Desktop/Screenshot 2022-08-17 at 22.17.32.png"
+image_path = r"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/databrary/db1.mp4"
 
 # Open the image
 image = Image.open(image_path)
@@ -13,5 +13,5 @@ blurred_image = image.filter(ImageFilter.GaussianBlur(radius=10))  # Adjust radi
 blurred_image.show()
 
 # Optionally, save the blurred image to a new file
-output_path = r"/Users/aviyamegiddoshaked/Desktop/blurred_image.png"
+output_path = r"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/gaussian_blur_databraryoutputs"
 blurred_image.save(output_path)

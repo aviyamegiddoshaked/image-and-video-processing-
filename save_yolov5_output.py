@@ -6,12 +6,18 @@ import numpy as np
 import os
 
 # --- Configuration ---
-video_path = "runs part3/radius1.mov"
-output_csv_path = "runs part3/radius1.csv"
-output_video_path = "runs part3/yolo_annotated_radius1.mp4"
+video_path = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/databrary-asspart4/gaussian_blur_databraryoutputs/blurred_databarry6.mp4"
 
-# Create output folder if it doesn't exist
+# Derive file name without extension
+video_name = os.path.splitext(os.path.basename(video_path))[0]
+
+# Define output paths with filenames
+output_csv_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/csvfiles_databrary/{video_name}.csv"
+output_video_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/yoloblurred_databrary/{video_name}_output.mp4"
+
+# Create output directories if they don't exist
 os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
+os.makedirs(os.path.dirname(output_video_path), exist_ok=True)
 
 # Load YOLOv5 model (small model)
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', trust_repo=True)
@@ -20,7 +26,7 @@ model.eval()
 # Open the video
 cap = cv2.VideoCapture(video_path)
 if not cap.isOpened():
-    print("❌ Error: Cannot open video.")
+    print(f"❌ Error: Cannot open video: {video_path}")
     exit()
 
 # Get video properties
