@@ -11,9 +11,9 @@ video_path = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs
 # Derive file name without extension
 video_name = os.path.splitext(os.path.basename(video_path))[0]
 
-# Define output paths with filenames
-output_csv_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/csvfiles_databrary/{video_name}.csv"
-output_video_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/yoloblurred_databrary/{video_name}_output.mp4"
+# ✅ Correct output paths
+output_csv_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/databrary-asspart4/csvfiles_databrary/{video_name}.csv"
+output_video_path = f"/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/databrary-asspart4/yoloblurred_databrary/{video_name}_output.mp4"
 
 # Create output directories if they don't exist
 os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
@@ -50,7 +50,7 @@ while cap.isOpened():
     if not ret:
         break
 
-    # Convert frame from BGR (OpenCV) to RGB (YOLO expects RGB)
+    # Convert frame from BGR to RGB (YOLO expects RGB)
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Run YOLO inference
@@ -63,7 +63,7 @@ while cap.isOpened():
     all_detections.append(detections)
 
     # Draw detections on the frame
-    for index, row in detections.iterrows():
+    for _, row in detections.iterrows():
         x1, y1, x2, y2 = int(row['xmin']), int(row['ymin']), int(row['xmax']), int(row['ymax'])
         label = f"{row['name']} {row['confidence']:.2f}"
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
