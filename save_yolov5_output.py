@@ -6,7 +6,7 @@ import numpy as np
 import os
 
 # --- Configuration ---
-video_path = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/databrary-asspart4/gaussian_blur_databraryoutputs/blurred_databarry6.mp4"
+video_path = "/Users/aviyamegiddoshaked/Desktop/image-and-video-processing-/runs/databrary-asspart4/gaussian_blur_databraryoutputs/blurred_databarry11.mp4"
 
 # Derive file name without extension
 video_name = os.path.splitext(os.path.basename(video_path))[0]
