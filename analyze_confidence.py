@@ -23,7 +23,7 @@ def analyze_confidence(csv_path):
         ]).reset_index()
 
         #output_file = os.path.splitext(csv_path)[0] + '_analysis.csv'
-        output_dir = "runs/confidence_analysis_outputs"
+        output_dir = "runs/confidence_analysis_outputs/after_blurring"
         os.makedirs(output_dir, exist_ok=True)
         base_name = os.path.splitext(os.path.basename(csv_path))[0]
         output_file = os.path.join(output_dir, f"{base_name}_analysis.csv")
